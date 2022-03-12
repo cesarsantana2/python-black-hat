@@ -18,13 +18,13 @@ def usage():
     print("nc\n")
     print("Usage: nc.py -t target_host -p port\n")
     print("-l --listen                  - listen on [host]:[port] for incoming connections\n")
-    print("-e --execyte=file_to_run     - execute the hive file upon receiving a connection\n")
-    print("-c --command                 - initialaze a command shell")
+    print("-e --execyte=file_to_run     - execute the give file upon receiving a connection\n")
+    print("-c --command                 - initialaze a command shell\n")
     print("-u --upload=destination      - upon receiving connection upload a file and write to [destination]\n\n")
     print("Examples:\n")
     print("nc.py -t 192.168.0.1 -p 5555 -l -c\n")
     print("nc.py -t 192.168.0.1 -p 5555 -l -u=c:\\target.exe\n")
-    print("nc.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\"")
+    print("nc.py -t 192.168.0.1 -p 5555 -l -e=\"cat /etc/passwd\n")
     print("echo 'ABCDEFGHI' | ./nc.py -t 192.168.0.1 -p 135")
     sys.exit(0)
 
@@ -74,7 +74,7 @@ def server_loop():
 
     while True:
         client_socket, add = server.accept()
-        client_thread = threading.Therad(target=client_handler, args=(client_socket,))
+        client_thread = threading.Thread(target=client_handler, args=(client_socket,))
         client_thread.start()
 
 
@@ -121,10 +121,10 @@ def client_handler(client_socket):
 
     if command:
         while True:
-            client_socket.send("<nc:# ")
+            client_socket.send(b"<nc:# ")
 
-            cmd_buffer = ""
-            while "\n" not in cmd_buffer:
+            cmd_buffer = b""
+            while b"\n" not in cmd_buffer:
                 cmd_buffer += client_socket.recv(1024)
 
             response = run_command(cmd_buffer)
