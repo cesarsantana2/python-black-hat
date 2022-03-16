@@ -6,13 +6,13 @@ def request_handler(buffer):
     #use your imagination
     return buffer
 
-def request_handler(buffer):
+def response_handler(buffer):
     #use your imagination
     return buffer
 
 def receive_from(connection):
 
-    buffer = ""
+    buffer = b""
     connection.settimeout(2)
 
     try:
@@ -24,7 +24,7 @@ def receive_from(connection):
 
             buffer += data
 
-    except:
+    except TimeoutError:
         pass
 
     return buffer
@@ -40,8 +40,7 @@ def hexdump(src, length=16):
         result.append( b"%04X %-*s %s" % (i, length*(digits+1), hexa, text))
 
     print(b"\n".join(result))
-
-
+    
 
 def proxy_handler(client_socket, remote_host, remote_port, receive_first):
 
@@ -49,7 +48,6 @@ def proxy_handler(client_socket, remote_host, remote_port, receive_first):
         remote_socket.connect((remote_host,remote_port))
 
         if receive_first:
-
             remote_buffer = receive_from(remote_socket)
             hexdump(remote_buffer)
 
