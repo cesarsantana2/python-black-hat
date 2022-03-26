@@ -1,5 +1,4 @@
 import socket
-from tkinter import E
 import paramiko
 import threading
 import sys
@@ -52,7 +51,7 @@ try:
             command = input("Enter command: ")
             if command != "exit":
                 chan.send(command)
-                print(chan.recv(1024)+"\n")
+                print(chan.recv(1024).decode(errors="ignore") + "\n")
             else:
                 chan.send("exit")
                 print("exiting")
@@ -67,4 +66,3 @@ except Exception as e:
     except:
         pass
     sys.exit(1)
-    
