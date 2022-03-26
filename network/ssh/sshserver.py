@@ -1,4 +1,5 @@
 import socket
+from tkinter import E
 import paramiko
 import threading
 import sys
@@ -34,5 +35,36 @@ except Exception as e:
     print("[-] Listen failed: "+str(e)) 
     sys.exit(1)
 
-
-
+try:
+    bhSession = paramiko.Transport(client)
+    bhSession.add_server_key(host_key)
+    server = Server()
+    try:
+        bhSession.start_server(server=server)
+    except paramiko.SSHException as e:
+        print("[-] SSH negotation failed")
+    chan = bhSession.accept(20)
+    print("[+] Authenticated!")
+    print(chan.recv(1024))
+    chan.send("Welcome to ssh")
+    while True:
+        try:
+            command = input("Enter command: ")
+            if command != "exit":
+                chan.send(command)
+                print(chan.recv(1024)+"\n")
+            else:
+                chan.send("exit")
+                print("exiting")
+                bhSession.close()
+                raise Exception("exit")
+        except KeyboardInterrupt:
+            bhSession.close()
+except Exception as e:
+    print("[-] Caught exception: "+str(e))
+    try:
+        bhSession.close()
+    except:
+        pass
+    sys.exit(1)
+    
