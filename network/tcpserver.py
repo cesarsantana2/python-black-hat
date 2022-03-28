@@ -10,10 +10,10 @@ server.bind((bind_ip,bind_port))
 
 server.listen(5)
 
-print("[*] Listening on %s:%d" % (bind_ip,bin_port))
+print("[*] Listening on %s:%d" % (bind_ip,bind_port))
 
 
-def handle_client(client_socket)
+def handle_client(client_socket):
 
     request = client_socket.recv(1024)
 
