@@ -8,17 +8,17 @@ host = "192.168.0.10"
 
 class IP(Structure):
     _fields_ = [
-        ("ihl",           c_ubyte, 4),
-        ("version",       c_ubyte, 4),
-        ("tos",           c_ubyte),
-        ("len",           c_ushort),
-        ("id",            c_ushort),
-        ("offset",        c_ushort),
-        ("ttl",           c_ubyte),
-        ("protocol_num",  c_ubyte),
-        ("sum",           c_ushort),
-        ("src",           c_uint32),
-        ("dst",           c_uint32)]
+        ("ihl", c_ubyte, 4),
+        ("version", c_ubyte, 4),
+        ("tos", c_ubyte),
+        ("len", c_ushort),
+        ("id", c_ushort),
+        ("offset", c_ushort),
+        ("ttl", c_ubyte),
+        ("protocol_num", c_ubyte),
+        ("sum", c_ushort),
+        ("src", c_uint32),
+        ("dst", c_uint32)]
 
     def __new__(cls, socket_buffer=None):
         return cls.from_buffer_copy(socket_buffer)
@@ -38,6 +38,23 @@ class IP(Structure):
             self.protocol = self.protocol_map[self.protocol_num]
         except IndexError:
             self.protocol = str(self.protocol_num)
+
+
+class ICMP(Structure):
+    
+    _fields_ = [
+        ("type",         c_ubyte),
+        ("code",         c_ubyte),
+        ("checksum",     c_ushort),
+        ("unused",       c_ushort),
+        ("next_hop_mtu", c_ushort)]
+    
+    def __new__(cls, socket_buffer):
+        return cls.from_buffer_copy(socket_buffer)
+
+    def __init__(self, socket_buffer):
+        self.socket_buffer = socket_buffer
+
 
 #este código deve parecer familiar, pois foi visto no exemplo anterior
 if os.name == "nt":
@@ -59,10 +76,22 @@ try:
         raw_buffer = sniffer.recvfrom(64435)[0]
 
         # cria um cabecalho IP a partir dos 20 primeiros bytes do buffer
-        ip_header = IP(raw_buffer[:20])
+        ip_header = IP(raw_buffer[0:20])
 
         # exibe o protocolo detectado e os hosts
         print("Protocol: %s %s -> %s" % (ip_header.protocol,ip_header.src_address,ip_header.dst_address))
+
+        # se for ICMP, nos queremos o pacote
+        if ip_header.protocol == "ICMP":
+            # calcula em que ponto nosso pacote ICMP comeca
+            offset = ip_header.ihl * 4
+            buf = raw_buffer[offset:offset + sizeof(ICMP)]
+            
+            # cria nossa estrutura ICMP
+            icmp_header = ICMP(buf)
+            
+            print("ICMP -> Type: %d Code: %d" % (icmp_header.type, icmp_header.code))
+
 
 #trata o CTRL-C
 except KeyboardInterrupt:
