@@ -8,9 +8,9 @@ import signal
 
 interface = "en1"
 #lembrar de editar o parametro para receber o ip dinamicamente
-target_ip = "172.16.1.71"
+target_ip = "10.0.2.15"
 #lembrar de editar o parametro para receber o ip dinamicamente
-gateway_ip = "172.16.1.254"
+gateway_ip = "10.0.2.15"
 packet_count = 1000
 
 #define a nossa interface
