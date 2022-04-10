@@ -1,19 +1,20 @@
-import Queue
+import queue
 import threading
 import os
-import urllib3
-
+import urllib.error
+import urllib.parse
+import urllib.request
 threads = 10
 
 target = "https://www.wonderingschool.org/"
-directory = "/home/cs/Documents/map"
+directory = "/home/cs/Documents/map/wordpress-5.9.3/wordpress/"
 filters = [".jpg", ".gif", ".png", ".css"]
 
 os.chdir(directory)
 
-web_paths = Queue.Queue()
+web_paths = queue.Queue()
 
-for r,d,f in os.wal("."):
+for r,d,f in os.walk("."):
     for files in f:
         remote_path = "%s/%s" % (r,files)
         if remote_path.startswith("."):
@@ -26,17 +27,17 @@ def test_remote():
         path = web_paths.get()
         url = "%s%s" % (target, path)
 
-        request = urllib3.Request(url)
+        request = urllib.request.Request(url)
 
         try:
-            response = urllib3.urlopen(request)
+            response = urllib.request.urlopen(request)
             content = response.read()
 
             print("[%d] => %s" % (response.code, path))
             response.close()
 
-        except urllib3.HTTPError as error:
-            #print("Failed %s" % error.code)
+        except urllib.error.HTTPError as error:
+            print("Failed %s" % error.code)
             pass
 
 for i in range(threads):
