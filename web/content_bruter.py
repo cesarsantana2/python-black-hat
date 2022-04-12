@@ -5,10 +5,36 @@ import urllib.parse
 import urllib.request
 
 threads = 50
-target_url = "https://www.wonderingschool.org/"
-wordlist_file = "/tmp/all.txt" #de SVNDigger
+target_url = "https://www.wonderingschool.org"
+wordlist_file = "all.txt" #de SVNDigger
 resume = None
 user_agent = "Mozilla/5.0 (X11; Linux x86_64; rv:19.0 Gecko/20100101 Firefox/19.0"
+
+
+def build_wordlist(wordlist_file):
+    
+    #Lê a lista de palavras
+    fd = open(wordlist_file, "r")
+    raw_words = [line.rstrip('\n') for line in fd]
+    fd.close()
+
+    found_resume = False
+    words = queue.Queue()
+
+    for word in raw_words:
+    
+        if resume:
+
+            if found_resume:
+                words.put(word)
+            else:
+                if word == resume:
+                    found_resume = True
+                    print("Resuming wordlist from: %s" % resume)
+        else:
+            words.put(word)
+
+    return words
 
 
 def dir_bruter(word_queue, extensions=None):
@@ -38,8 +64,8 @@ def dir_bruter(word_queue, extensions=None):
 
             try:
                 headers = {}
-                headers["User-Agent"] = user_agent
-                r = urllib.Request(url, headers=headers)
+                headers = {"User-Agent" : user_agent}
+                r = urllib.request.Request(url, headers=headers)
 
                 response = urllib.request.urlopen(r)
 
@@ -51,33 +77,6 @@ def dir_bruter(word_queue, extensions=None):
                     print("!!! %d => %s" % (e.code, url))
                 pass
 
-
-def build_wordlist(wordlist_file):
-
-    #Lê a lista de palavras
-    fd = open(wordlist_file, "r")
-    raw_words = fd.readlines()
-    fd.close()
-
-    found_resume = False
-    words = queue.Queue()
-
-    for word in raw_words:
-
-        word = word.rstrip()
-
-        if resume is not None:
-
-            if found_resume:
-                words.put(word)
-            else:
-                if word == resume:
-                    found_resume = True
-                    print("Resuming wordlist from: %s" % resume)
-        else:
-            words.put(word)
-
-    return words
 
 word_queue = build_wordlist(wordlist_file)
 file_extensions = [".php", ".bak", ".orig", ".inc"]
