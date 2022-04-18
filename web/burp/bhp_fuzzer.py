@@ -1,16 +1,16 @@
-from configparser import ExtendedInterpolation
-from email.message import _PayloadType
+# -*- coding: utf-8 -*-
 from burp import IBurpExtender
 from burp import IIntruderPayloadGeneratorFactory
 from burp import IIntruderPayloadGenerator
 
 from java.util import List, ArrayList
 
+
 import random
 
 class BurpExtender(IBurpExtender, IIntruderPayloadGeneratorFactory):
     def registerExtenderCallbacks(self, callbacks):
-        self.callbacks = callbacks
+        self._callbacks = callbacks
         self._helpers = callbacks.getHelpers()
 
         callbacks.registerIntruderPayloadGeneratorFactory(self)
@@ -29,7 +29,7 @@ class BHPFuzzer(IIntruderPayloadGenerator):
         self._extender = extender
         self._helpers = extender._helpers
         self._attack = attack
-        self.max_payloads = 10
+        self.max_payloads = 100
         self.num_iterations = 0
 
         return
