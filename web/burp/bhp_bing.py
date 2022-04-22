@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 from burp import IBurpExtender
 from burp import IContextMenuFactory
 
-from javax.swing import JMenuITEM
+from javax.swing import JMenuItem
 from java.util import List, ArrayList
 from java.net import URL
 

@@ -1,4 +1,4 @@
-from html.parser import HTMLParser
+# -*- coding: utf-8 -*-
 from burp import IBurpExtender
 from burp import IContextMenuFactory
 
@@ -8,6 +8,7 @@ from java.net import URL
 
 import re
 from datetime import datetime
+from HTMLParser import HTMLParser
 
 class TagStripper(HTMLParser):
     def __init__(self):
@@ -51,7 +52,7 @@ class BurpExtender(IBurpExtender, IContextMenuFactory):
     def wordlist_menu(self,event):
 
         #obtem os detalhes daquilo que foi clicado pelo usuario
-        http_traffic = self.context.getSelectedMessges()
+        http_traffic = self.context.getSelectedMessages()
 
         for traffic in http_traffic:
             http_service = traffic.getHttpService()
@@ -78,7 +79,7 @@ class BurpExtender(IBurpExtender, IContextMenuFactory):
         tag_stripper = TagStripper()
         page_text = tag_stripper.strip(body)
 
-        words = re.findal("[a-zA-Z]\w{2,}", page_text)
+        words = re.findall("[a-zA-Z]\w{2,}", page_text)
 
         for word in words:
 
