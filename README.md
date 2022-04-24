@@ -37,6 +37,10 @@ Por exemplo, os códigos relacionados ao Burp Suite foram alocados em um reposit
 |   ├── tcpproxy.py
 |   ├── tcpserver.py
 |   └── udpclient.py
+├── trojan
+|   ├── config
+|   ├── data
+|   └── modulesw
 ├── web
 │   ├── burp
 |   |   ├── bhp_bing.py 
@@ -46,5 +50,6 @@ Por exemplo, os códigos relacionados ao Burp Suite foram alocados em um reposit
 │   ├── content_bruter.py
 │   ├── joomla_killer.py
 │   └── web_app_mapper.py
+|   
 └── README.md
 ```
