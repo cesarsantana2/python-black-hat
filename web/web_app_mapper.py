@@ -6,7 +6,7 @@ import urllib.parse
 import urllib.request
 threads = 10
 
-target = "https://www.wonderingschool.org/"
+target = ""
 directory = "/home/cs/Documents/map/wordpress-5.9.3/wordpress/"
 filters = [".jpg", ".gif", ".png", ".css"]
 
